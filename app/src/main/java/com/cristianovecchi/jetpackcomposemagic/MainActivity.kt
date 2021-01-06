@@ -34,8 +34,8 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun Counter() {
-    val count = remember { mutableStateOf(0)}
+fun Counter(start: Int) {
+    val count = remember { mutableStateOf(start)}
     Button(onClick =  { count.value++}){
         Text("I've been clicked ${count.value} times.")
     }
@@ -57,7 +57,7 @@ fun DefaultPreview() {
     JetpackComposeMagicTheme {
         Column{
             SimpleList()
-            Counter()
+            Counter(0)
         }
     }
 }
