@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
+import com.cristianovecchi.jetpackcomposemagic.composables.MagicTabs
 import com.cristianovecchi.jetpackcomposemagic.ui.JetpackComposeMagicTheme
 
 class MainActivity : AppCompatActivity() {
@@ -56,8 +57,9 @@ fun SimpleList(names: List<String> = listOf("Kotlin", "Java", "Scala")){
 fun DefaultPreview() {
     JetpackComposeMagicTheme {
         Column{
-            SimpleList()
-            Counter(0)
+            MagicTabs()
+            //SimpleList()
+            //Counter(0)
         }
     }
 }
