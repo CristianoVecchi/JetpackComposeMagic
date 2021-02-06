@@ -13,6 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
 import com.cristianovecchi.jetpackcomposemagic.composables.MagicTabs
+import com.cristianovecchi.jetpackcomposemagic.composables.NoteKeyboard
+import com.cristianovecchi.jetpackcomposemagic.composables.Out
 import com.cristianovecchi.jetpackcomposemagic.ui.JetpackComposeMagicTheme
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +24,9 @@ class MainActivity : AppCompatActivity() {
             JetpackComposeMagicTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+
+
+
                 }
             }
         }
@@ -56,8 +60,23 @@ fun SimpleList(names: List<String> = listOf("Kotlin", "Java", "Scala")){
 @Composable
 fun DefaultPreview() {
     JetpackComposeMagicTheme {
-        Column{
-            MagicTabs()
+        val output = remember { mutableStateOf("OUTPUT")}
+        Column {
+            Text(text = output.value)
+            NoteKeyboard(dispatch = { out ->
+                    when (out) {
+                        is Out.Note -> {output.value = out.note.toString(); println("NOTE: " + out.note.toString())}
+                        is Out.Accident -> output.value = out.ax.toString()
+                        is Out.Delete -> output.value = out.toString()
+                        is Out.Forward -> output.value = out.toString()
+                        is Out.Back -> output.value = out.toString()
+                        is Out.Enter -> output.value = out.toString()
+                        is Out.Undo -> output.value = out.toString()
+                    }
+                }
+            )
+            //MagicTabs()
+
             //SimpleList()
             //Counter(0)
         }
