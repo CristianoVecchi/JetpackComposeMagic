@@ -16,9 +16,12 @@ enum class NoteNamesEn {
 }enum class NoteNamesIt {
     Do,Re,Mi,Fa,Sol,La,Si
 }
-enum class Accidents(val ax : Char){
-    SHARP('#'), FLAT('b') , D_SHARP('x'), D_FLAT('§'), NATURAL(' ')
+enum class Accidents(val ax : String){
+    //SHARP("\uF023"), FLAT("\uF062") , D_SHARP("\uF045"), D_FLAT("\uF0BA"), NATURAL("\uF06E")
+    SHARP("#"), FLAT("b") , D_SHARP("x"), D_FLAT("bb"), NATURAL("§")
 }
+// Maestro Regular font
+// SHARP 61475 0xF023 // FLAT 61538 0xF062 // D_SHARP 61517 0xF045 //D_FLAT 61626 0xF0BA // NATURAL 61550 0xF06E
 sealed class Out {
     data class Note(val note: NoteNamesEn) : Out()
     data class Accident(val ax: Accidents) : Out()
@@ -37,13 +40,13 @@ fun NoteKeyboard(
     nRows: Int = 4, nCols: Int = 4,
     dispatch : (Out, String) -> Unit ) {
     val buttonInfos = listOf(
-        ButtonInfo(text = Accidents.D_SHARP.ax.toString(), output = Out.Accident(Accidents.D_SHARP)),
-        ButtonInfo(text = Accidents.SHARP.ax.toString(), output = Out.Accident(Accidents.SHARP)),
+        ButtonInfo(text = Accidents.D_SHARP.ax, output = Out.Accident(Accidents.D_SHARP)),
+        ButtonInfo(text = Accidents.SHARP.ax, output = Out.Accident(Accidents.SHARP)),
         ButtonInfo(text = "UN", output = Out.Undo),
         ButtonInfo(text = names[3], output = Out.Note(NoteNamesEn.F)),
 
-        ButtonInfo(text = Accidents.D_FLAT.ax.toString(), output = Out.Accident(Accidents.D_FLAT)),
-        ButtonInfo(text = Accidents.FLAT.ax.toString(), output = Out.Accident(Accidents.FLAT)),
+        ButtonInfo(text = Accidents.D_FLAT.ax, output = Out.Accident(Accidents.D_FLAT)),
+        ButtonInfo(text = Accidents.FLAT.ax, output = Out.Accident(Accidents.FLAT)),
         ButtonInfo(text = names[6], output = Out.Note(NoteNamesEn.B)),
         ButtonInfo(text = names[2], output = Out.Note(NoteNamesEn.E)),
 
