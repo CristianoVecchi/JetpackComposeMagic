@@ -5,6 +5,10 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 
 
 enum class NoteNamesEn {
@@ -13,7 +17,7 @@ enum class NoteNamesEn {
     Do,Re,Mi,Fa,Sol,La,Si
 }
 enum class Accidents(val ax : Char){
-    SHARP('#'), FLAT('b') , D_SHARP('x'), D_FLAT('§')
+    SHARP('#'), FLAT('b') , D_SHARP('x'), D_FLAT('§'), NATURAL(' ')
 }
 sealed class Out {
     data class Note(val note: NoteNamesEn) : Out()
@@ -31,7 +35,7 @@ private data class ButtonInfo(val text: String, val output: Out)
 fun NoteKeyboard(
     names : List<String> = NoteNamesIt.values().map{it.toString()},
     nRows: Int = 4, nCols: Int = 4,
-    dispatch : (Out) -> Unit ) {
+    dispatch : (Out, String) -> Unit ) {
     val buttonInfos = listOf(
         ButtonInfo(text = Accidents.D_SHARP.ax.toString(), output = Out.Accident(Accidents.D_SHARP)),
         ButtonInfo(text = Accidents.SHARP.ax.toString(), output = Out.Accident(Accidents.SHARP)),
@@ -65,8 +69,8 @@ fun NoteKeyboard(
                         Text(text = "  ")
                     } else {
                         val buttonInfo = buttonInfos[buttonIndex++]
-                        Button(onClick = {dispatch(buttonInfo.output)} ) {
-                            Text(text = buttonInfo.text)
+                        Button(modifier= Modifier.padding(2.dp),  onClick = {dispatch(buttonInfo.output, buttonInfo.text)}) {
+                            Text(text = buttonInfo.text, style = TextStyle(fontSize = TextUnit.Sp(22), fontWeight = FontWeight.Bold) )
                         }
                     }
 

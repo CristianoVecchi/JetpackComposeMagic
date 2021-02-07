@@ -8,13 +8,12 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
-import com.cristianovecchi.jetpackcomposemagic.composables.MagicTabs
-import com.cristianovecchi.jetpackcomposemagic.composables.NoteKeyboard
-import com.cristianovecchi.jetpackcomposemagic.composables.Out
+import com.cristianovecchi.jetpackcomposemagic.composables.*
 import com.cristianovecchi.jetpackcomposemagic.ui.JetpackComposeMagicTheme
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
             JetpackComposeMagicTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-
+                    DefaultPreview()
 
 
                 }
@@ -60,18 +59,41 @@ fun SimpleList(names: List<String> = listOf("Kotlin", "Java", "Scala")){
 @Composable
 fun DefaultPreview() {
     JetpackComposeMagicTheme {
-        val output = remember { mutableStateOf("OUTPUT")}
+        //val output = remember { mutableStateOf("OUTPUT")}
+        val clips: MutableList<Clip> = remember { mutableStateListOf()}
+        val cursor = remember { mutableStateOf(-1) }
+        val id = remember { mutableStateOf(0) }
         Column {
-            Text(text = output.value)
-            NoteKeyboard(dispatch = { out ->
+            //Text(text = output.value)
+            NoteClipDisplay(noteClips = clips, cursor = cursor.value,
+                    dispatch = { id ->
+                        for(i in 0 until clips.size) if(clips[i].id == id) cursor.value = i
+                    }
+
+        )
+            NoteKeyboard(dispatch = { out, text ->
                     when (out) {
-                        is Out.Note -> {output.value = out.note.toString(); println("NOTE: " + out.note.toString())}
-                        is Out.Accident -> output.value = out.ax.toString()
-                        is Out.Delete -> output.value = out.toString()
-                        is Out.Forward -> output.value = out.toString()
-                        is Out.Back -> output.value = out.toString()
-                        is Out.Enter -> output.value = out.toString()
-                        is Out.Undo -> output.value = out.toString()
+                        is Out.Note -> {
+                            if(cursor.value == clips.size-1){
+                                cursor.value++
+                                clips.add(Clip(text, id.value++ , -1, out.note,Accidents.NATURAL))
+
+                            } else {
+                               clips.add(cursor.value ,Clip(text,  id.value++,-1, out.note,Accidents.NATURAL))
+                            }
+
+
+                        }
+                        is Out.Accident -> {}
+                        is Out.Delete -> {
+                                            if(clips.isNotEmpty()) clips.removeAt(cursor.value )
+                                            if(cursor.value > 0) cursor.value--
+                                            if(clips.isEmpty()) cursor.value = -1
+                        }
+                        is Out.Forward -> {if (cursor.value < clips.size -1) cursor.value++}
+                        is Out.Back -> {if (clips.isNotEmpty() && cursor.value > 0) cursor.value--}
+                        is Out.Enter -> {}
+                        is Out.Undo -> {}
                     }
                 }
             )
