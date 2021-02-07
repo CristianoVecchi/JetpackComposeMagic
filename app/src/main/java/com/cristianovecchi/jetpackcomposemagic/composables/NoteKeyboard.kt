@@ -57,7 +57,7 @@ fun NoteKeyboard(
         ButtonInfo(text = names[4], output = Out.Note(NoteNamesEn.G)),
         ButtonInfo(text = names[0], output = Out.Note(NoteNamesEn.C)),
     )
-    var buttonIndex = 0;
+    var buttonIndex = 0
     Column(modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,){
 
@@ -73,8 +73,6 @@ fun NoteKeyboard(
                             Text(text = buttonInfo.text, style = TextStyle(fontSize = TextUnit.Sp(22), fontWeight = FontWeight.Bold) )
                         }
                     }
-
-
                 }
             }
         }
