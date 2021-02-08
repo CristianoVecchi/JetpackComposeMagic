@@ -1,15 +1,21 @@
 package com.cristianovecchi.jetpackcomposemagic.composables
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-
 
 enum class NoteNamesEn {
     C,D,E,F,G,A,B
@@ -30,6 +36,9 @@ sealed class Out {
     object Back: Out()
     object Enter: Out()
     object Undo: Out()
+    object FullBack : Out()
+    object FullForward : Out()
+    object Analysis : Out()
 }
 
 private data class ButtonInfo(val text: String, val output: Out)
@@ -37,28 +46,34 @@ private data class ButtonInfo(val text: String, val output: Out)
 @Composable
 fun NoteKeyboard(
     names : List<String> = NoteNamesIt.values().map{it.toString()},
-    nRows: Int = 4, nCols: Int = 4,
+    nRows: Int = 5, nCols: Int = 4, res_done: Int? = null,
     dispatch : (Out, String) -> Unit ) {
     val buttonInfos = listOf(
-        ButtonInfo(text = Accidents.D_SHARP.ax, output = Out.Accident(Accidents.D_SHARP)),
-        ButtonInfo(text = Accidents.SHARP.ax, output = Out.Accident(Accidents.SHARP)),
-        ButtonInfo(text = "UN", output = Out.Undo),
-        ButtonInfo(text = names[3], output = Out.Note(NoteNamesEn.F)),
+            ButtonInfo(text = Accidents.D_FLAT.ax, output = Out.Accident(Accidents.D_FLAT)),
+            ButtonInfo(text = Accidents.D_SHARP.ax, output = Out.Accident(Accidents.D_SHARP)),
+            ButtonInfo(text = Accidents.FLAT.ax, output = Out.Accident(Accidents.FLAT)),
+            ButtonInfo(text = Accidents.SHARP.ax, output = Out.Accident(Accidents.SHARP)),
 
-        ButtonInfo(text = Accidents.D_FLAT.ax, output = Out.Accident(Accidents.D_FLAT)),
-        ButtonInfo(text = Accidents.FLAT.ax, output = Out.Accident(Accidents.FLAT)),
-        ButtonInfo(text = names[6], output = Out.Note(NoteNamesEn.B)),
-        ButtonInfo(text = names[2], output = Out.Note(NoteNamesEn.E)),
+            ButtonInfo(text = "DEL", output = Out.Delete),
+            ButtonInfo(text = "UN", output = Out.Undo),
+            ButtonInfo(text = Accidents.NATURAL.ax, output = Out.Accident(Accidents.NATURAL)),
+            ButtonInfo(text = names[3], output = Out.Note(NoteNamesEn.F)),
 
-        ButtonInfo(text = "DEL", output = Out.Delete),
-        ButtonInfo(text = "->", output = Out.Forward),
-        ButtonInfo(text = names[5], output = Out.Note(NoteNamesEn.A)),
-        ButtonInfo(text = names[1], output = Out.Note(NoteNamesEn.D)),
+            ButtonInfo(text = "|<-", output = Out.FullBack),
+            ButtonInfo(text = "->|", output = Out.FullForward),
+            ButtonInfo(text = names[6], output = Out.Note(NoteNamesEn.B)),
+            ButtonInfo(text = names[2], output = Out.Note(NoteNamesEn.E)),
 
-        ButtonInfo(text = "OK", output = Out.Enter),
-        ButtonInfo(text = "<-", output = Out.Back),
-        ButtonInfo(text = names[4], output = Out.Note(NoteNamesEn.G)),
-        ButtonInfo(text = names[0], output = Out.Note(NoteNamesEn.C)),
+            ButtonInfo(text = "<-", output = Out.Back),
+            ButtonInfo(text = "->", output = Out.Forward),
+            ButtonInfo(text = names[5], output = Out.Note(NoteNamesEn.A)),
+            ButtonInfo(text = names[1], output = Out.Note(NoteNamesEn.D)),
+
+            ButtonInfo(text = "OK", output = Out.Enter),
+            ButtonInfo(text = "AN", output = Out.Analysis),
+            ButtonInfo(text = names[4], output = Out.Note(NoteNamesEn.G)),
+            ButtonInfo(text = names[0], output = Out.Note(NoteNamesEn.C)),
+
     )
     var buttonIndex = 0
     Column(modifier = Modifier.fillMaxSize(),
@@ -66,19 +81,40 @@ fun NoteKeyboard(
 
         for (i in 0 until nRows){
             Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,) {
+                horizontalArrangement = Arrangement.SpaceEvenly,)
+            {
                 for (j in 0 until nCols) {
                     if( buttonIndex == buttonInfos.size ){
                         Text(text = "  ")
-                    } else {
+                    } else
+                    {
                         val buttonInfo = buttonInfos[buttonIndex++]
-                        Button(modifier= Modifier.padding(2.dp),  onClick = {dispatch(buttonInfo.output, buttonInfo.text)}) {
-                            Text(text = buttonInfo.text, style = TextStyle(fontSize = TextUnit.Sp(22), fontWeight = FontWeight.Bold) )
+                        val text = buttonInfo.text
+
+                        if(text.equals("OK") && res_done != null) {
+
+                            IconButton(modifier = Modifier.padding(2.dp).
+                                                    preferredSize(72.dp).border(2.dp, Color.Black).
+                                                    background(Color.White, RoundedCornerShape(4.dp)),
+                                        onClick = {dispatch(buttonInfo.output, buttonInfo.text)})
+                            {
+                                Icon(
+                                       imageVector = vectorResource(id = res_done),
+                                       tint = Color.Green)
+                            }
+                        } else
+                        {
+                            Button(modifier= Modifier.padding(2.dp),
+                                    onClick = {dispatch(buttonInfo.output, buttonInfo.text)})
+                            {
+                                Text(text = text,
+                                        style = TextStyle(fontSize = TextUnit.Sp(22),
+                                        fontWeight = FontWeight.Bold) )
+                            }
                         }
                     }
                 }
             }
         }
-
     }
 }
