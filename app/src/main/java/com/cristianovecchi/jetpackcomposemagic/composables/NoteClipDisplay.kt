@@ -42,16 +42,16 @@ fun NoteClipDisplay(noteClips: List<Clip>, cursor: Int = -1,
                             val clip = noteClips[index]
 
                                 Card(modifier = Modifier.background(Color.White).
-                                                clip(RoundedCornerShape(4.dp)).padding(6.dp).clickable {dispatch(clip.id)},
+                                                clip(RoundedCornerShape(6.dp)).padding(6.dp).clickable {dispatch(clip.id)},
 
                                         backgroundColor = if (cursor == index) selectionBackColor else unselectionBackColor,
                                         contentColor = if (cursor == index) selectionTextColor else unselectionTextColor,
                                         border = BorderStroke(2.dp, if (cursor == index) selectionBorderColor else unselectionBorderColor),
-                                        elevation = if (cursor == index) 12.dp else 4.dp
+                                        elevation = if (cursor == index) 4.dp else 4.dp
                                     )
                                 {
                                     Text(text = clip.text, modifier = Modifier.padding(18.dp),
-                                            style = TextStyle(fontSize = TextUnit.Companion.Sp(if (cursor == index) 28 else 20),
+                                            style = TextStyle(fontSize = TextUnit.Companion.Sp(if (cursor == index) 20 else 20),
                                             fontWeight = if (cursor == index) FontWeight.Bold else FontWeight.Normal))
                                 }
                             index++
