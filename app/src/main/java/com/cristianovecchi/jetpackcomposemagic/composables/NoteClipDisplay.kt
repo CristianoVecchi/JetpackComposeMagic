@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
 @Composable
 fun NoteClipDisplay(noteClips: List<Clip>, cursor: Int = -1,
@@ -63,6 +64,29 @@ fun NoteClipDisplay(noteClips: List<Clip>, cursor: Int = -1,
     }
 }
 
-data class Clip(val text: String, val id: Int,
+data class Clip(val text: String = "/", val id: Int = -1,
                 val abstractNote: Int = -1,
-                val name: NoteNamesEn, val ax: Accidents = Accidents.NATURAL)
+                val name: NoteNamesEn = NoteNamesEn.EMPTY, val ax: Accidents = Accidents.EMPTY)
+
+fun randomClip(noteNames: List<String>, id: Int): Clip {
+    val n = Random.nextInt(0,8)
+    val a = Random.nextInt(0, 5)
+    val newId = id + 1
+    return when (n) {
+        in 0..6 -> {
+            Clip(noteNames[n]+ if(a !=4) {Accidents.values()[a].ax} else "" ,
+                    newId, NoteNamesEn.values()[n].abs,
+                    NoteNamesEn.values()[n], Accidents.values()[a])
+        }
+        else -> Clip()
+    }
+}
+
+fun randomClipSequence(noteNames: List<String>, id: Int, size: Int): MutableList<Clip>{
+    var seq = mutableListOf<Clip>()
+    for(i in 0 until size){
+        val newId = id + 1
+        seq.add(randomClip(noteNames, newId))
+    }
+    return seq
+}

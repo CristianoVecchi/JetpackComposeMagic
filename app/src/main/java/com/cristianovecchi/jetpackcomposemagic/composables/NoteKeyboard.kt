@@ -17,14 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
-enum class NoteNamesEn {
-    C,D,E,F,G,A,B
+enum class NoteNamesEn(val abs:Int) {
+    C(0),D(2),E(4),F(5),G(7),A(9),B(11),EMPTY(-1)
 }enum class NoteNamesIt {
-    Do,Re,Mi,Fa,Sol,La,Si
+    Do,Re,Mi,Fa,Sol,La,Si,EMPTY
 }
 enum class Accidents(val ax : String){
     //SHARP("\uF023"), FLAT("\uF062") , D_SHARP("\uF045"), D_FLAT("\uF0BA"), NATURAL("\uF06E")
-    SHARP("#"), FLAT("b") , D_SHARP("x"), D_FLAT("bb"), NATURAL("§")
+    SHARP("#"), FLAT("b") , D_SHARP("x"), D_FLAT("bb"), NATURAL("§"), EMPTY("")
 }
 // Maestro Regular font
 // SHARP 61475 0xF023 // FLAT 61538 0xF062 // D_SHARP 61517 0xF045 //D_FLAT 61626 0xF0BA // NATURAL 61550 0xF06E
@@ -91,7 +91,7 @@ fun NoteKeyboard(
                         val buttonInfo = buttonInfos[buttonIndex++]
                         val text = buttonInfo.text
 
-                        if(text.equals("OK") && res_done != null) {
+                        if(text == "OK" && res_done != null) {
 
                             IconButton(modifier = Modifier.padding(2.dp).
                                                     preferredSize(72.dp).border(2.dp, Color.Black).
