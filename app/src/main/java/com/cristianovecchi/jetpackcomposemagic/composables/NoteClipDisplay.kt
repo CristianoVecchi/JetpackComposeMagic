@@ -1,5 +1,6 @@
 package com.cristianovecchi.jetpackcomposemagic.composables
 
+import android.os.Parcelable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import kotlinx.android.parcel.Parcelize
 import kotlin.random.Random
 
 @Composable
@@ -64,9 +66,13 @@ fun NoteClipDisplay(noteClips: List<Clip>, cursor: Int = -1,
     }
 }
 
-data class Clip(val text: String = "/", val id: Int = -1,
+@Parcelize
+data class Clip(val text: String = "/",
+                val id: Int = -1,
                 val abstractNote: Int = -1,
-                val name: NoteNamesEn = NoteNamesEn.EMPTY, val ax: Accidents = Accidents.EMPTY)
+                val name: NoteNamesEn = NoteNamesEn.EMPTY,
+                val ax: Accidents = Accidents.EMPTY) : Parcelable
+
 
 fun randomClip(noteNames: List<String>, id: Int): Clip {
     val n = Random.nextInt(0,8)

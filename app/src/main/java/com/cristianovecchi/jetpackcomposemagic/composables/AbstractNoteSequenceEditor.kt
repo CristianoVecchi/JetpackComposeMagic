@@ -1,5 +1,6 @@
 package com.cristianovecchi.jetpackcomposemagic.composables
 
+import android.os.Bundle
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,7 +13,7 @@ import java.util.*
 
 
 @Composable
-fun AbstractNoteSequenceEditor(res_done: Int? = null) {
+fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (Bundle) -> Unit) {
     val nClipCols = 3
 
     val clips: MutableList<Clip> = remember { mutableStateListOf() }
@@ -207,6 +208,11 @@ fun AbstractNoteSequenceEditor(res_done: Int? = null) {
                             is Out.Analysis -> {
                             }
                             is Out.Enter -> {
+                                val bundle = Bundle()
+                                val list = ArrayList<Clip>()
+                                clips.forEach { list.add(it) }
+                                bundle.putParcelableArrayList("list", list)
+                                done_action(bundle)
                             }
                         }
                     }
