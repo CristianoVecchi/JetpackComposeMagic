@@ -13,7 +13,7 @@ import java.util.*
 
 
 @Composable
-fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (Bundle) -> Unit) {
+fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (ArrayList<Clip>) -> Unit) {
     val nClipCols = 3
 
     val clips: MutableList<Clip> = remember { mutableStateListOf() }
@@ -208,11 +208,9 @@ fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (Bundle) -> U
                             is Out.Analysis -> {
                             }
                             is Out.Enter -> {
-                                val bundle = Bundle()
                                 val list = ArrayList<Clip>()
                                 clips.forEach { list.add(it) }
-                                bundle.putParcelableArrayList("list", list)
-                                done_action(bundle)
+                                done_action(list)
                             }
                         }
                     }

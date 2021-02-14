@@ -10,7 +10,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.cristianovecchi.jetpackcomposemagic.composables.AbstractNoteSequenceEditor
+import com.cristianovecchi.jetpackcomposemagic.composables.Clip
 import com.cristianovecchi.jetpackcomposemagic.ui.JetpackComposeMagicTheme
+import java.util.ArrayList
 
 class InputFragment: Fragment() {
     override fun onCreateView(
@@ -24,7 +26,11 @@ class InputFragment: Fragment() {
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
                         AbstractNoteSequenceEditor(res_done = R.drawable.ic_baseline_done_24,
-                        done_action = { bundle: Bundle -> findNavController().navigate(R.id.outputFragment, bundle)})
+                        done_action = { list ->
+                            val bundle = Bundle()
+                            bundle.putParcelableArrayList("list", list)
+                            findNavController().navigate(R.id.outputFragment, bundle)
+                        })
                     }
                 }
             }
