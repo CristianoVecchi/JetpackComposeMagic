@@ -22,9 +22,9 @@ enum class NoteNamesEn(val abs:Int) {
 }enum class NoteNamesIt {
     Do,Re,Mi,Fa,Sol,La,Si,EMPTY
 }
-enum class Accidents(val ax : String){
+enum class Accidents(val ax : String, val sum : Int){
     //SHARP("\uF023"), FLAT("\uF062") , D_SHARP("\uF045"), D_FLAT("\uF0BA"), NATURAL("\uF06E")
-    SHARP("#"), FLAT("b") , D_SHARP("x"), D_FLAT("bb"), NATURAL("§"), EMPTY("")
+    SHARP("#", 1), FLAT("b", -1) , D_SHARP("x",2), D_FLAT("bb",-2), NATURAL("§",0), EMPTY("",0)
 }
 // Maestro Regular font
 // SHARP 61475 0xF023 // FLAT 61538 0xF062 // D_SHARP 61517 0xF045 //D_FLAT 61626 0xF0BA // NATURAL 61550 0xF06E

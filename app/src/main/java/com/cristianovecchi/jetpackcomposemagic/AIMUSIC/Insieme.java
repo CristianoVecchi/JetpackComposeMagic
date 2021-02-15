@@ -4,6 +4,7 @@
  */
 // Altro approccio: Oggetto Insieme ( set di note ), e tutte le azioni che si possono fare su un set di note
 package com.cristianovecchi.jetpackcomposemagic.AIMUSIC;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Vector;
 public class Insieme {
@@ -188,8 +189,7 @@ public class Insieme {
         
 	// confronta due int (a bit singolo!) e stabilisci se l'intervallo � presente in un set di intervalli;
 	// se c'� ritorna l'intervallo, se no ritorna -1(confronto impossibile) o 0 (intervallo non presente)
-	
-        // Pare che funziona......
+
     
     public static int isInSet( int nota1, int nota2, int setIntervalli) {
 		
@@ -204,6 +204,29 @@ public class Insieme {
                }
        return 0;
     }
+
+    public static boolean isIntervalInSet(int[] intervalSet, int pitch1, int pitch2){
+		int interval = Math.abs(pitch2 - pitch1);
+		for (int i : intervalSet){
+			if (interval == i) return true;
+		}
+		return false;
+	}
+	// NOT -1 allowed
+	public static int[] invertAbsPitches(int[] pitches){
+		if(pitches.length < 2) return pitches;
+		int[] result = new int[pitches.length];
+		int pivot = pitches[0];
+		result[0] = pivot;
+		for(int i = 1; i<pitches.length; i++){
+
+			int interval = (pitches[i]-pivot) * -1;
+			result[i] = pivot + interval;
+			if(result[i] > 11) result[i] -= 12;
+			if(result[i] < 0) result[i] += 12;
+		}
+		return result;
+	}
     
     // ritorna true se la direzione � giusta
     public static boolean checkDirezioneArmonica(int nota1, int nota2){
@@ -763,6 +786,14 @@ public class Insieme {
 			if ((noteByte & dByte) != 0 ) return i;
 		}
 		return res;
+	}
+
+	public static int transposeAbsPitch(int pitch, int transpose){
+		if (pitch == -1) return -1;
+		pitch += transpose;
+		if(pitch > 11) return pitch - 12;
+		if(pitch < 0) return pitch + 12;
+		return pitch;
 	}
 
 

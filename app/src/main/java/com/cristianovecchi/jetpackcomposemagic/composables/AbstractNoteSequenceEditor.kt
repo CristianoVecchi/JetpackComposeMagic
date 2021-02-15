@@ -82,14 +82,14 @@ fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (ArrayList<Cl
                             is Out.Note -> {
                                 if (cursor.value == clips.size - 1) {
                                     cursor.value++
-                                    clips.add(Clip(text, id.value++, -1, out.note, Accidents.NATURAL))
+                                    clips.add(Clip(text, id.value++, out.note.abs , out.note, Accidents.NATURAL))
 
                                     stack.push(Undo(ArrayList<Clip>(clips), cursor.value))
                                     lastOutIsNotUndo.value = true
                                     lastIsCursorChanged.value = true
 
                                 } else {
-                                    clips.add(cursor.value, Clip(text, id.value++, -1, out.note, Accidents.NATURAL))
+                                    clips.add(cursor.value, Clip(text, id.value++, out.note.abs, out.note, Accidents.NATURAL))
                                     stack.push(Undo(ArrayList<Clip>(clips), cursor.value))
                                     lastOutIsNotUndo.value = true
                                 }
@@ -99,17 +99,17 @@ fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (ArrayList<Cl
                                     val oldClip = clips[cursor.value]
                                     val newClip: Clip
                                     val change: Boolean
-                                    if (oldClip.ax != Accidents.NATURAL) {
-                                        if (out.ax == Accidents.NATURAL) {
-                                            newClip = Clip(oldClip.text.removeSuffix(oldClip.ax.ax), oldClip.id, oldClip.abstractNote, oldClip.name, Accidents.NATURAL)
+                                    if (oldClip.ax != Accidents.NATURAL) { // Note has accident
+                                        if (out.ax == Accidents.NATURAL) { // Removes the previous accident
+                                            newClip = Clip(oldClip.text.removeSuffix(oldClip.ax.ax), oldClip.id, Clip.inAbsRange(oldClip.abstractNote - oldClip.ax.sum), oldClip.name, Accidents.NATURAL)
                                             change = true
                                         } else {
-                                            if (oldClip.text.contains(out.ax.ax)) {
-                                                newClip = Clip(oldClip.text.removeSuffix(out.ax.ax), oldClip.id, oldClip.abstractNote, oldClip.name, Accidents.NATURAL)
+                                            if (oldClip.text.contains(out.ax.ax)) { // Removes the same accident
+                                                newClip = Clip(oldClip.text.removeSuffix(out.ax.ax), oldClip.id, Clip.inAbsRange(oldClip.abstractNote - oldClip.ax.sum), oldClip.name, Accidents.NATURAL)
                                                 change = true
-                                            } else {
+                                            } else { // Replaces the previous accident with a new one
                                                 val noteName = oldClip.text.removeSuffix(oldClip.ax.ax)
-                                                newClip = Clip(noteName + out.ax.ax, oldClip.id, oldClip.abstractNote, oldClip.name, out.ax)
+                                                newClip = Clip(noteName + out.ax.ax, oldClip.id, Clip.inAbsRange(oldClip.abstractNote - oldClip.ax.sum + out.ax.sum) , oldClip.name, out.ax)
                                                 change = true
                                             }
                                         }
@@ -118,7 +118,7 @@ fun AbstractNoteSequenceEditor(res_done: Int? = null, done_action: (ArrayList<Cl
                                             change = false
                                             newClip = oldClip
                                         } else {
-                                            newClip = Clip(oldClip.text + out.ax.ax, oldClip.id, oldClip.abstractNote, oldClip.name, out.ax)
+                                            newClip = Clip(oldClip.text + out.ax.ax, oldClip.id, Clip.inAbsRange(oldClip.abstractNote  + out.ax.sum), oldClip.name, out.ax)
                                             change = true
                                         }
                                     }

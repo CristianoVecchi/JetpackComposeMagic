@@ -67,11 +67,37 @@ fun NoteClipDisplay(noteClips: List<Clip>, cursor: Int = -1,
 }
 
 @Parcelize
-data class Clip(val text: String = "/",
+data class Clip(val text: String = "",
                 val id: Int = -1,
-                val abstractNote: Int = -1,
+                var abstractNote: Int = -1,
                 val name: NoteNamesEn = NoteNamesEn.EMPTY,
-                val ax: Accidents = Accidents.EMPTY) : Parcelable
+                val ax: Accidents = Accidents.EMPTY) : Parcelable {
+
+                    companion object {
+                        fun inAbsRange(absPitch: Int) : Int {
+                            if(absPitch > 11) return absPitch - 12
+                            if(absPitch < 0) return absPitch + 12
+                            return absPitch
+                        }
+                        fun convertAbsToString(absPitch: Int, noteNames: List<String> ): String {
+                            return when (absPitch) {
+                                0 -> "${noteNames[0]}"
+                                1 -> "${noteNames[0]}${Accidents.SHARP.ax}" //C#
+                                2 -> "${noteNames[1]}"
+                                3 -> "${noteNames[2]}${Accidents.FLAT.ax}"//Eb
+                                4 -> "${noteNames[2]}"
+                                5 -> "${noteNames[3]}"
+                                6 -> "${noteNames[3]}${Accidents.SHARP.ax}"//F#
+                                7 -> "${noteNames[4]}"
+                                8 -> "${noteNames[4]}${Accidents.SHARP.ax}"//G#
+                                9 -> "${noteNames[5]}"
+                                10 -> "${noteNames[6]}${Accidents.FLAT.ax}"//Bb
+                                11 -> "${noteNames[6]}"
+                                else -> ""
+                            }
+                        }
+                    }
+                }
 
 
 fun randomClip(noteNames: List<String>, id: Int): Clip {
